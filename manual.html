@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Manual - daily_stock_analysis</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:800px;margin:auto;padding:20px;background:#f5f5f5}
+h1{color:#1a73e8;border-bottom:3px solid #1a73e8;padding-bottom:10px}
+h2{color:#333;background:#e8e8e8;padding:8px 12px;border-radius:5px;margin-top:30px}
+h3{color:#555;margin-top:20px}
+code{background:#ddd;padding:2px 6px;border-radius:3px;font-size:14px}
+pre{background:#222;color:#0f0;padding:15px;border-radius:5px;overflow-x:auto}
+.box{background:#fff;padding:15px;border-radius:5px;border-left:4px solid #1a73e8;margin:10px 0}
+.box-green{border-left-color:#34a853}
+.box-red{border-left-color:#ea4335}
+.box-yellow{border-left-color:#fbbc04}
+.step{background:#fff;padding:15px;border-radius:5px;margin:10px 0;border:1px solid #ddd}
+.step-num{background:#1a73e8;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:bold;margin-right:10px}
+table{border-collapse:collapse;width:100%;margin:10px 0}
+th,td{border:1px solid #ddd;padding:8px;text-align:left}
+th{background:#1a73e8;color:#fff}
+tr:nth-child(even){background:#f9f9f9}
+.warn{background:#fff3cd;border:1px solid #ffc107;padding:10px;border-radius:5px;margin:10px 0}
+footer{text-align:center;color:#888;margin-top:40px;padding:20px;border-top:1px solid #ddd}
+</style>
+</head>
+<body>
+
+<h1>📈 Manual Completo: daily_stock_analysis</h1>
+<p>Cómo configurar y usar el sistema de análisis de acciones con IA</p>
+
+<h2>📋 Índice</h2>
+<ol>
+<li><a href="#q1">¿Qué es esto?</a></li>
+<li><a href="#q2">Hacer Fork (copia del proyecto)</a></li>
+<li><a href="#q3">Obtener API Key de Gemini (IA gratuita)</a></li>
+<li><a href="#q4">Crear Bot de Telegram</a></li>
+<li><a href="#q5">Obtener Chat ID de Telegram</a></li>
+<li><a href="#q6">Configurar Secrets en GitHub</a></li>
+<li><a href="#q7">Activar y ejecutar Workflows</a></li>
+<li><a href="#q8">Interpretar el reporte</a></li>
+<li><a href="#q9">Cambiar lista de acciones después</a></li>
+<li><a href="#q10">Cambiar hora de notificación</a></li>
+<li><a href="#q11">Poner reportes en inglés</a></li>
+<li><a href="#q12">Resumen de Secrets</a></li>
+</ol>
+
+<!-- SECCION 1 -->
+<h2 id="q1">1️⃣ ¿Qué es esto?</h2>
+<div class="box">
+Es un sistema que analiza acciones automáticamente usando Inteligencia Artificial (Gemini).
+<br><br>
+<strong>Cada día hábil a las 18:00 (hora Beijing):</strong>
+<ul>
+<li>Obtiene datos de tus acciones (precio, volumen, etc.)</li>
+<li>Busca noticias recientes de cada empresa</li>
+<li>La IA analiza todo y asigna un puntaje 0-100</li>
+<li>Te envía un reporte a Telegram con recomendación</li>
+</ul>
+<strong>Mercados soportados:</strong> USA, A股 (China), Hong Kong, Japón, Corea, Taiwán
+<br><br>
+<strong>No hace trading automático.</strong> Solo te informa para que tú decidas.
+</div>
+
+<!-- SECCION 2 -->
+<h2 id="q2">2️⃣ Hacer Fork (copia del proyecto)</h2>
+<div class="step">
+  <span class="step-num">1</span>
+  <strong>Abre el repositorio original:</strong><br>
+  <a href="https://github.com/ZhuLinsen/daily_stock_analysis" target="_blank">https://github.com/ZhuLinsen/daily_stock_analysis</a>
+</div>
+<div class="step">
+  <span class="step-num">2</span>
+  <strong>Click en "Fork"</strong> (arriba a la derecha)
+</div>
+<div class="step">
+  <span class="step-num">3</span>
+  <strong>Selecciona tu cuenta</strong> y click en "Create fork"
+</div>
+<div class="step">
+  <span class="step-num">4</span>
+  <strong>Espera unos segundos</strong> y ya tienes el repositorio copiado en tu cuenta
+</div>
+
+<!-- SECCION 3 -->
+<h2 id="q3">3️⃣ Obtener API Key de Gemini (gratis)</h2>
+<p>Gemini es la inteligencia artificial que analizará las acciones. Es gratuita.</p>
+<div class="step">
+  <span class="step-num">1</span>
+  <strong>Ir a:</strong> <a href="https://aistudio.google.com/" target="_blank">https://aistudio.google.com/</a>
+</div>
+<div class="step">
+  <span class="step-num">2</span>
+  <strong>Inicia sesión</strong> con tu cuenta de Google
+</div>
+<div class="step">
+  <span class="step-num">3</span>
+  <strong>Click en "Get API Key"</strong> (arriba a la izquierda)
+</div>
+<div class="step">
+  <span class="step-num">4</span>
+  <strong>Click en "Create API Key"</strong>
+</div>
+<div class="step">
+  <span class="step-num">5</span>
+  <strong>Copia la clave</strong> (empieza con <code>AIzaSy...</code>)
+</div>
+<div class="warn">
+  ⚠️ Guarda esta clave en un bloc de notas. La necesitarás más adelante.
+</div>
+
+<!-- SECCION 4 -->
+<h2 id="q4">4️⃣ Crear Bot de Telegram</h2>
+<p>Para recibir los reportes en Telegram.</p>
+<div class="step">
+  <span class="step-num">1</span>
+  <strong>Abre Telegram</strong> y busca <strong>@BotFather</strong>
+</div>
+<div class="step">
+  <span class="step-num">2</span>
+  <strong>Envía:</strong> <code>/newbot</code>
+</div>
+<div class="step">
+  <span class="step-num">3</span>
+  <strong>Te pide nombre:</strong> escribe "Mi Bot Acciones" (o el que quieras)
+</div>
+<div class="step">
+  <span class="step-num">4</span>
+  <strong>Te pide username:</strong> escribe "NombreQueQuieras_bot" (debe terminar en <strong>_bot</strong>)
+</div>
+<div class="step">
+  <span class="step-num">5</span>
+  <strong>BotFather responde</strong> con un mensaje. Copia el TOKEN.
+  <br>Ejemplo: <code>7234567890:AAEbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb</code>
+</div>
+<div class="warn">
+  ⚠️ Guarda este TOKEN. Lo necesitarás en los Secrets.
+</div>
+
+<!-- SECCION 5 -->
+<h2 id="q5">5️⃣ Obtener Chat ID de Telegram</h2>
+<p>El Chat ID es como la "dirección" de tu chat para que el bot te envie mensajes.</p>
+<div class="step">
+  <span class="step-num">1</span>
+  <strong>En Telegram, busca tu bot</strong> (el que creaste, ej: @sabio_bot)
+</div>
+<div class="step">
+  <span class="step-num">2</span>
+  <strong>Envíale cualquier mensaje:</strong> "hola" o click en "Iniciar"
+</div>
+<div class="step">
+  <span class="step-num">3</span>
+  <strong>Abre el navegador</strong> y pega esta URL (reemplazando el token):
+  <pre>https://api.telegram.org/bot7234567890:AAEbbbb/getUpdates</pre>
+  <p>(cambia <code>7234567890:AAEbbbb</code> por el token que te dio BotFather)</p>
+</div>
+<div class="step">
+  <span class="step-num">4</span>
+  <strong>Busca en la página</strong> el número después de <code>"chat":{"id":</code>
+  <br>Ejemplo: <code>{"chat":{"id":123456789,...}</code>
+  <br>El número <strong>123456789</strong> es tu Chat ID
+</div>
+<div class="warn">
+  ⚠️ Si ves <code>{"ok":true,"result":[]}</code> vacío, significa que NO le has escrito al bot. Hazlo y recarga la página.
+</div>
+
+<!-- SECCION 6 -->
+<h2 id="q6">6️⃣ Configurar Secrets en GitHub</h2>
+<p>Los Secrets son como "cajitas" donde guardas tus claves de forma segura.</p>
+
+<div class="step">
+  <span class="step-num">1</span>
+  <strong>En tu repositorio fork, ve a:</strong><br>
+  <code>Settings</code> → <code>Secrets and variables</code> → <code>Actions</code>
+</div>
+
+<div class="step">
+  <span class="step-num">2</span>
+  <strong>Click en "New repository secret"</strong>
+</div>
+
+<div class="step">
+  <span class="step-num">3</span>
+  <strong>Rellena los 2 campos:</strong><br>
+  - <strong>Name:</strong> el nombre de la variable<br>
+  - <strong>Secret:</strong> el valor<br><br>
+  Click en <strong>"Add secret"</strong>
+</div>
+
+<p>Repite el paso 3 para cada uno de estos 5 Secrets:</p>
+
+<table>
+  <tr><th>#</th><th>Name</th><th>Secret (qué pones)</th><th>Obligatorio</th></tr>
+  <tr><td>1</td><td><code>STOCK_LIST</code></td><td><code>AAPL,TSLA,NEM,WDC</code> (tus acciones)</td><td>✅ Sí</td></tr>
+  <tr><td>2</td><td><code>GEMINI_API_KEY</code></td><td><code>AIzaSy...</code> (de Google AI Studio)</td><td>✅ Sí</td></tr>
+  <tr><td>3</td><td><code>TELEGRAM_BOT_TOKEN</code></td><td><code>7234567890:AAEbb...</code> (de BotFather)</td><td>❌ Opcional</td></tr>
+  <tr><td>4</td><td><code>TELEGRAM_CHAT_ID</code></td><td><code>123456789</code> (el número)</td><td>❌ Opcional</td></tr>
+  <tr><td>5</td><td><code>REPORT_LANGUAGE</code></td><td><code>en</code> (para inglés)</td><td>❌ Opcional</td></tr>
+</table>
+
+<div class="warn">
+  ⚠️ Cada Secret se crea por separado. Tienes que hacer "New repository secret" 5 veces.
+</div>
+
+<!-- SECCION 7 -->
+<h2 id="q7">7️⃣ Activar y ejecutar Workflows</h2>
+
+<div class="step">
+  <span class="step-num">1</span>
+  <strong>Ve a la pestaña "Actions"</strong> (arriba en tu repositorio)
+</div>
+<div class="step">
+  <span class="step-num">2</span>
+  <strong>Click en el botón verde</strong> "I understand my workflows, go ahead and enable them"
+</div>
+<div class="step">
+  <span class="step-num">3</span>
+  <strong>Menú izquierdo:</strong> click en <strong>"00-daily-analysis"</strong>
+</div>
+<div class="step">
+  <span class="step-num">4</span>
+  <strong>Click en "Run workflow"</strong> (arriba derecha, botón gris)
+</div>
+<div class="step">
+  <span class="step-num">5</span>
+  <strong>En el menú desplegable:</strong><br>
+  - Mode: dejarlo en "full"<br>
+  - Force run: marcar el checkbox (ponerlo en true)<br>
+  <strong>Click en "Run workflow"</strong> (botón verde)
+</div>
+<div class="step">
+  <span class="step-num">6</span>
+  <strong>Espera 3-10 minutos</strong> mientras se ejecuta. Verás un círculo verde cuando termine.
+</div>
+<div class="step">
+  <span class="step-num">7</span>
+  <strong>Si configuraste Telegram,</strong> te llegará el reporte automáticamente.
+</div>
+
+<!-- SECCION 8 -->
+<h2 id="q8">8️⃣ Interpretar el reporte</h2>
+
+<p>El reporte que llega a Telegram se ve así:</p>
+
+<div class="box box-green">
+  <strong>📊 Score 70-100 → 🟢 Buy (Comprar)</strong><br>
+  La IA considera que es buen momento para comprar.
+</div>
+
+<div class="box box-yellow">
+  <strong>📊 Score 40-69 → 🟡 Watch (Esperar)</strong><br>
+  La IA recomienda observar, sin prisas.
+</div>
+
+<div class="box box-red">
+  <strong>📊 Score 0-39 → 🔴 Sell/Reduce (Vender/Reducir)</strong><br>
+  La IA sugiere vender o reducir posición.
+</div>
+
+<table>
+  <tr><th>Campo</th><th>Significado</th></tr>
+  <tr><td>Score</td><td>Puntuación 0-100 (más alto = mejor)</td></tr>
+  <tr><td>Bullish</td><td>Sentimiento positivo, puede subir</td></tr>
+  <tr><td>Bearish</td><td>Sentimiento negativo, puede bajar</td></tr>
+  <tr><td>Sideways</td><td>Sin tendencia clara, lateral</td></tr>
+  <tr><td>Consolidating</td><td>Se está estabilizando después de un movimiento</td></tr>
+  <tr><td>Non-trading</td><td>Hoy no es día de mercado (finde/feriado)</td></tr>
+</table>
+
+<div class="warn">
+  ⚠️ <strong>Esto no es asesoría financiera.</strong> Es solo una referencia. Tú decides si compras o vendes.
+</div>
+
+<!-- SECCION 9 -->
+<h2 id="q9">9️⃣ Cambiar lista de acciones después</h2>
+<div class="step">
+  <span class="step-num">1</span>
+  <strong>Settings</strong> → <strong>Secrets and variables</strong> → <strong>Actions</strong>
+</div>
+<div class="step">
+  <span class="step-num">2</span>
+  <strong>Busca</strong> el Secret <code>STOCK_LIST</code>
+</div>
+<div class="step">
+  <span class="step-num">3</span>
+  <strong>Click en el lápiz ✏️</strong> (editar)
+</div>
+<div class="step">
+  <span class="step-num">4</span>
+  <strong>Cambia la lista</strong> (ej: <code>AAPL,GOOGL,MSFT,AMZN</code>)
+</div>
+<div class="step">
+  <span class="step-num">5</span>
+  <strong>Click en "Save"</strong>
+</div>
+<p>La próxima ejecución usará la nueva lista. No necesitas crear otro Secret.</p>
+
+<!-- SECCION 10 -->
+<h2 id="q10">🔟 Cambiar hora de notificación</h2>
+<p>Por defecto: 18:00 hora Beijing = 12:00 España (verano) / 11:00 (invierno)</p>
+
+<div class="step">
+  <span class="step-num">1</span>
+  <strong>En tu fork, abre:</strong> <code>.github/workflows/00-daily-analysis.yml</code>
+</div>
+<div class="step">
+  <span class="step-num">2</span>
+  <strong>Click en el lápiz ✏️</strong> para editar
+</div>
+<div class="step">
+  <span class="step-num">3</span>
+  <strong>Busca la línea:</strong> <code>cron: '0 10 * * 1-5'</code>
+</div>
+<div class="step">
+  <span class="step-num">4</span>
+  <strong>Cámbiala según tu hora preferida:</strong>
+
+  <table>
+    <tr><th>Hora España (verano)</th><th>UTC</th><th>Poner en cron</th></tr>
+    <tr><td>8:00</td><td>6:00</td><td><code>0 6 * * 1-5</code></td></tr>
+    <tr><td>9:00</td><td>7:00</td><td><code>0 7 * * 1-5</code></td></tr>
+    <tr><td>10:00</td><td>8:00</td><td><code>0 8 * * 1-5</code></td></tr>
+    <tr><td>12:00</td><td>10:00</td><td><code>0 10 * * 1-5</code> (original)</td></tr>
+    <tr><td>16:00</td><td>14:00</td><td><code>0 14 * * 1-5</code></td></tr>
+    <tr><td>20:00</td><td>18:00</td><td><code>0 18 * * 1-5</code></td></tr>
+  </table>
+</div>
+<div class="step">
+  <span class="step-num">5</span>
+  <strong>Click en "Commit changes"</strong> (guardar)
+</div>
+
+<!-- SECCION 11 -->
+<h2 id="q11">1️⃣1️⃣ Poner reportes en inglés</h2>
+<div class="step">
+  <span class="step-num">1</span>
+  Crear un nuevo Secret:
+  <table>
+    <tr><th>Name</th><th>Secret</th></tr>
+    <tr><td><code>REPORT_LANGUAGE</code></td><td><code>en</code></td></tr>
+  </table>
+</div>
+<div class="step">
+  <span class="step-num">2</span>
+  <strong>Click en "Add secret"</strong>
+</div>
+<p>Los reportes te llegarán en inglés.</p>
+
+<!-- SECCION 12 -->
+<h2 id="q12">1️⃣2️⃣ Resumen rápido</h2>
+<table>
+  <tr><th>Nombre del Secret</th><th>Para qué sirve</th></tr>
+  <tr><td><code>STOCK_LIST</code></td><td>Lista de acciones a analizar</td></tr>
+  <tr><td><code>GEMINI_API_KEY</code></td><td>IA que analiza las acciones</td></tr>
+  <tr><td><code>TELEGRAM_BOT_TOKEN</code></td><td>Token del bot de Telegram</td></tr>
+  <tr><td><code>TELEGRAM_CHAT_ID</code></td><td>ID del chat donde recibir mensajes</td></tr>
+  <tr><td><code>REPORT_LANGUAGE</code></td><td><code>en</code> para inglés</td></tr>
+</table>
+
+<p><strong>Ejecución automática:</strong> Cada día hábil a las 18:00 Beijing (12:00 España verano).</p>
+<p><strong>Feriados:</strong> No se ejecuta (USA, China, HK). Se puede forzar con "force run".</p>
+<p><strong>Costo:</strong> 100% gratuito. GitHub Actions tiene 2000 minutos gratis al mes.</p>
+
+<h2>❓ Solución de problemas</h2>
+
+<div class="box-red">
+  <strong>"chat not found" en Telegram</strong><br>
+  El Chat ID es incorrecto. Repite el paso 5 y asegúrate de copiar el número exacto.
+</div>
+
+<div class="box-red">
+  <strong>No llega nada a Telegram pero salió ✅</strong><br>
+  Revisa los logs del workflow en Actions, busca "Telegram" y mira si hay algún error.
+</div>
+
+<div class="box-red">
+  <strong>"Gemini API Key: ❌"</strong><br>
+  No configuraste GEMINI_API_KEY o el nombre está mal escrito (con espacios, guiones, etc).
+</div>
+
+<div class="box-red">
+  <strong>El workflow no se ejecuta en automático</strong><br>
+  Revisa que los workflows estén habilitados (Actions → botón verde). También que sea día hábil.
+</div>
+
+<footer>
+  <p>Manual generado para configuración del proyecto <strong>daily_stock_analysis</strong></p>
+  <p><a href="https://github.com/ZhuLinsen/daily_stock_analysis" target="_blank">Repositorio original</a></p>
+  <p>Esto no constituye asesoría financiera. Usar bajo tu propio criterio.</p>
+</footer>
+
+</body>
+</html>
